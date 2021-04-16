@@ -6,11 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +29,8 @@ public class MainFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private TextView nama;
+    private RecyclerView rvpost;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -70,6 +73,15 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        rvpost=view.findViewById(R.id.rvpost);
+        nama=view.findViewById(R.id.nama);
+        nama.setText("Selamat Datang "+Config.name);
+
+
+
+
+
+
 
         Button button = view.findViewById(R.id.buttonnewpost);
         button.setOnClickListener(new View.OnClickListener() {

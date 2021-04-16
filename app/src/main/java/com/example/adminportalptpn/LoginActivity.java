@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,19 +71,23 @@ public class LoginActivity extends AppCompatActivity {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, postUrl, postData, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                System.out.println(response);
+                Log.e("testlogin", response.toString());
+
                 try {
-                    String token = response.getString("token");
-                    if (!token.equals("")){
-                        Config.username="fandofast";
-                        Config.email="fando@gmail.com";
-                        Config.nohp="08137899942";
-                        Config.token=token;
+                    String kode =response.getString("kode");
 
-                        Toast.makeText(LoginActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
+                    if (kode.equals("200")){
+                            JSONObject jsonUser = response.getJSONObject("user");
+                            String token= response.getString("_token");
+                            Config.ID=jsonUser.getString("id");
+                            Config.name=jsonUser.getString("name");
+                            Config.email=jsonUser.getString("email");
+                            Config.nohp=jsonUser.getString("hp");
+                            Config.token=token;
+                            Toast.makeText(LoginActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
 
-                        Intent intent= new Intent(LoginActivity.this,MainActivity.class);
-                        startActivity(intent);
+                            Intent intent= new Intent(LoginActivity.this,MainActivity.class);
+                            startActivity(intent);
 
                     }
 
