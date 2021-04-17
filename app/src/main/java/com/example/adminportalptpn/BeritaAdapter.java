@@ -1,5 +1,6 @@
 package com.example.adminportalptpn;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -17,8 +19,13 @@ public class BeritaAdapter extends RecyclerView.Adapter<BeritaAdapter.ViewHolder
 
     List<Berita> list = new ArrayList<>();
 
-    public BeritaAdapter(List<Berita> list) {
+    private Context context;
+    private FragmentManager fm;
+
+    public BeritaAdapter(List<Berita> list,Context context,FragmentManager fm) {
         this.list = list;
+        this.context=context;
+        this.fm=fm;
     }
 
     @NonNull
@@ -26,7 +33,6 @@ public class BeritaAdapter extends RecyclerView.Adapter<BeritaAdapter.ViewHolder
     public ViewHolders onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_berita, parent, false);
-
         return new ViewHolders(view);
     }
 
@@ -41,6 +47,8 @@ public class BeritaAdapter extends RecyclerView.Adapter<BeritaAdapter.ViewHolder
          holder.action.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
+
+            Dialog.bottomDialogPlaylist(context,berita,fm);
 
              }
          });

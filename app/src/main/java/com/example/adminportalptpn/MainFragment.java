@@ -102,8 +102,7 @@ public class MainFragment extends Fragment {
         rvpost=view.findViewById(R.id.rvpost);
         rvpost.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false));
         rvpost.setHasFixedSize(true);
-        beritaAdapter =new BeritaAdapter(beritaList);
-
+        beritaAdapter =new BeritaAdapter(beritaList,context,getFragmentManager());
         rvpost.setAdapter(beritaAdapter);
 
 
@@ -118,7 +117,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.frame, NewPostFragment.newInstance("data1","data2"));
+                ft.replace(R.id.frame, NewPostFragment.newInstance());
                 ft.addToBackStack(null);
                 ft.commit();
             }
