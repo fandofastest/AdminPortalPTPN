@@ -4,9 +4,20 @@ import io.realm.RealmObject;
 
 public class Berita extends RealmObject {
     private  int no ;
-    private String judul,penulis,kategori,foto,isi,tanggal;
+    private String id,judul,penulis,kategori,foto,isi,tanggal;
+
+
+
 
     public Berita() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getNo() {

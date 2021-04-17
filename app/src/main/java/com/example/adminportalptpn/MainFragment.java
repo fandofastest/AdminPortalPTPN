@@ -1,18 +1,37 @@
 package com.example.adminportalptpn;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +50,12 @@ public class MainFragment extends Fragment {
     private String mParam2;
     private TextView nama;
     private RecyclerView rvpost;
+
+    private List<Berita> beritaList = new ArrayList<>();
+
+    private  BeritaAdapter beritaAdapter;
+
+    private Context context;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -60,6 +85,7 @@ public class MainFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        context=getContext();
     }
 
     @Override
@@ -74,14 +100,18 @@ public class MainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rvpost=view.findViewById(R.id.rvpost);
+        rvpost.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false));
+        rvpost.setHasFixedSize(true);
+        beritaAdapter =new BeritaAdapter(beritaList);
+
+        rvpost.setAdapter(beritaAdapter);
+
+
+
+
+
         nama=view.findViewById(R.id.nama);
         nama.setText("Selamat Datang "+Config.name);
-
-
-
-
-
-
 
         Button button = view.findViewById(R.id.buttonnewpost);
         button.setOnClickListener(new View.OnClickListener() {
@@ -96,5 +126,70 @@ public class MainFragment extends Fragment {
 
 
 
+
+        getBerita();
+
+
+
     }
+
+
+    public void getBerita(){
+        String url = Config.GETBERITA;
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String kode =response.getString("kode");
+                            if (kode.equals("200")){
+
+                                JSONArray databerita= response.getJSONArray("berita");
+
+                                for (int i = 0; i < databerita.length() ; i++) {
+                                    JSONObject jsonObject=  databerita.getJSONObject(i);
+
+                                    Berita berita = new Berita();
+                                    berita.setId(jsonObject.getString("id"));
+                                    berita.setJudul(jsonObject.getString("judul"));
+                                    berita.setTanggal(jsonObject.getString("tanggal"));
+                                    berita.setIsi(jsonObject.getString("isi"));
+                                    berita.setKategori(jsonObject.getString("kategori_id"));
+
+                                    beritaList.add(berita);
+
+
+                                }
+
+                                beritaAdapter.notifyDataSetChanged();
+
+
+
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                });
+
+        requestQueue.add(jsonObjectRequest);
+
+    }
+
+
+
 }
