@@ -59,9 +59,7 @@ public class RealmHelper {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm1) {
-                Berita model = realm1.where(Berita.class)
-                        .equalTo("no", berita.getNo())
-                        .findFirst();
+                Berita model = realm1.where(Berita.class).equalTo("no", berita.getNo()).findFirst();
 
                 model.setIsi(berita.getIsi());
                 model.setJudul(berita.getJudul());
@@ -80,6 +78,19 @@ public class RealmHelper {
             }
         });
     }
+
+    public void deleteberita(Integer no) {
+        final RealmResults<Berita> model = realm.where(Berita.class).equalTo("no", no).findAll();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                model.deleteFromRealm(0);
+
+
+            }
+        });
+    }
+
 
 
 

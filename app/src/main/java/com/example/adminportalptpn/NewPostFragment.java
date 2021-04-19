@@ -181,7 +181,7 @@ public class NewPostFragment extends Fragment {
                 //2021-04-16 03:35:33
 
                 if (edit){
-                    if ( online){
+                    if (online){
                     edit(title.getText().toString(),nowAsISO,katselected,isi.getText().toString(),"foto",berita.getId());
 
                     }
@@ -212,7 +212,9 @@ public class NewPostFragment extends Fragment {
         public void editoffline(Berita berita){
 
         RealmHelper realmHelper = new RealmHelper(context);
+
         realmHelper.update(berita);
+
 
 }
 

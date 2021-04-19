@@ -65,10 +65,22 @@ public class Dialog {
         hapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delete(berita.getId(),context);
+
+                if (online){
+                    delete(berita.getId(),context);
+
+                }
+
+                else {
+
+                    RealmHelper realmHelper = new RealmHelper(context);
+                    realmHelper.deleteberita(berita.getNo());
+
+
+                }
                 dialog.dismiss();
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.frame, ListOnLineFragment.newInstance("data1","data2"));
+                ft.replace(R.id.frame, MainFragment2.newInstance("data1","data2"));
                 ft.addToBackStack(null);
                 ft.commit();
 
