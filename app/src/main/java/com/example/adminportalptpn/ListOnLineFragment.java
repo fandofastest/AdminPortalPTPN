@@ -1,7 +1,6 @@
 package com.example.adminportalptpn;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,13 +10,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,10 +32,10 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MainFragment#newInstance} factory method to
+ * Use the {@link ListOnLineFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class ListOnLineFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,7 +53,7 @@ public class MainFragment extends Fragment {
     private  BeritaAdapter beritaAdapter;
 
     private Context context;
-    public MainFragment() {
+    public ListOnLineFragment() {
         // Required empty public constructor
     }
 
@@ -69,8 +66,8 @@ public class MainFragment extends Fragment {
      * @return A new instance of fragment MainFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance(String param1, String param2) {
-        MainFragment fragment = new MainFragment();
+    public static ListOnLineFragment newInstance(String param1, String param2) {
+        ListOnLineFragment fragment = new ListOnLineFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -102,15 +99,15 @@ public class MainFragment extends Fragment {
         rvpost=view.findViewById(R.id.rvpost);
         rvpost.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false));
         rvpost.setHasFixedSize(true);
-        beritaAdapter =new BeritaAdapter(beritaList,context,getFragmentManager());
+        beritaAdapter =new BeritaAdapter(beritaList,context,getFragmentManager(),true);
         rvpost.setAdapter(beritaAdapter);
 
 
 
 
 
-        nama=view.findViewById(R.id.nama);
-        nama.setText("Selamat Datang "+Config.name);
+
+
 
         Button button = view.findViewById(R.id.buttonnewpost);
         button.setOnClickListener(new View.OnClickListener() {

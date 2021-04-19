@@ -21,11 +21,13 @@ public class BeritaAdapter extends RecyclerView.Adapter<BeritaAdapter.ViewHolder
 
     private Context context;
     private FragmentManager fm;
+      boolean online;
 
-    public BeritaAdapter(List<Berita> list,Context context,FragmentManager fm) {
+    public BeritaAdapter(List<Berita> list,Context context,FragmentManager fm,boolean online) {
         this.list = list;
         this.context=context;
         this.fm=fm;
+        this.online=online;
     }
 
     @NonNull
@@ -48,7 +50,7 @@ public class BeritaAdapter extends RecyclerView.Adapter<BeritaAdapter.ViewHolder
              @Override
              public void onClick(View v) {
 
-            Dialog.bottomDialogPlaylist(context,berita,fm);
+            Dialog.bottomDialogPlaylist(context,berita,fm,online);
 
              }
          });

@@ -1,7 +1,6 @@
 package com.example.adminportalptpn;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -56,6 +55,7 @@ public class NewPostFragment extends Fragment {
     Spinner kategori;
     String katselected;
     Button simpan;
+    boolean online =true;
     public NewPostFragment() {
         // Required empty public constructor
     }
@@ -74,11 +74,12 @@ public class NewPostFragment extends Fragment {
         return fragment;
     }
 
-    public static NewPostFragment editInstance(boolean edit,Berita berita) {
+    public static NewPostFragment editInstance(boolean edit,Berita berita,boolean online) {
         NewPostFragment fragment = new NewPostFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_PARAM1, edit);
         args.putParcelable(ARG_PARAM2, berita);
+        args.putBoolean("on",online);
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,6 +90,7 @@ public class NewPostFragment extends Fragment {
         if (getArguments() != null) {
             edit = getArguments().getBoolean(ARG_PARAM1);
             berita = getArguments().getParcelable(ARG_PARAM2);
+            online=getArguments().getBoolean("on");
         }
         context=getContext();
     }
@@ -111,8 +113,13 @@ public class NewPostFragment extends Fragment {
 
 
         if (edit){
-            title.setText(berita.getJudul());
+
+
             isi.setText(berita.getIsi());
+            title.setText(berita.getJudul());
+
+
+
 
             if (berita.getKategori().equals("Music")){
                 kategori.setSelection(0);
@@ -174,7 +181,15 @@ public class NewPostFragment extends Fragment {
                 //2021-04-16 03:35:33
 
                 if (edit){
+                    if ( online){
                     edit(title.getText().toString(),nowAsISO,katselected,isi.getText().toString(),"foto",berita.getId());
+
+                    }
+
+                    else {
+                      editoffline(berita);
+                    }
+
 
                 }
 
@@ -194,6 +209,12 @@ public class NewPostFragment extends Fragment {
 
     }
 
+        public void editoffline(Berita berita){
+
+        RealmHelper realmHelper = new RealmHelper(context);
+        realmHelper.update(berita);
+
+}
 
     public void edit(String judul,String tanggal,String kat,String isi,String gambar,String id){
         String postUrl = Config.EDIT+id;
@@ -226,7 +247,7 @@ public class NewPostFragment extends Fragment {
                         Toast.makeText(context, "Edit Berhasil", Toast.LENGTH_SHORT).show();
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.frame, MainFragment.newInstance("data1","data2"));
+                        ft.replace(R.id.frame, ListOnLineFragment.newInstance("data1","data2"));
                         ft.addToBackStack(null);
                         ft.commit();
 
@@ -245,6 +266,10 @@ public class NewPostFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, "Gagal Create", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
+
+
+
+
             }
         });
 
@@ -267,6 +292,8 @@ public class NewPostFragment extends Fragment {
             postData.put("_token", Config.token);
 
 
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -284,7 +311,7 @@ public class NewPostFragment extends Fragment {
                         Toast.makeText(context, "Create Berhasil", Toast.LENGTH_SHORT).show();
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.frame, MainFragment.newInstance("data1","data2"));
+                        ft.replace(R.id.frame, ListOnLineFragment.newInstance("data1","data2"));
                         ft.addToBackStack(null);
                         ft.commit();
 
@@ -304,6 +331,17 @@ public class NewPostFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, "Gagal Create", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
+
+                Berita berita = new Berita();
+                berita.setJudul(judul);
+                berita.setIsi(isi);
+                berita.setKategori(kat);
+                berita.setTanggal(tanggal);
+
+                RealmHelper realmHelper = new RealmHelper(context);
+                realmHelper.save(berita);
+
+
             }
         });
 

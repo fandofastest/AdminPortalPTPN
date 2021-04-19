@@ -1,16 +1,12 @@
 package com.example.adminportalptpn;
 
-import android.app.Activity;
 import android.content.Context;
-import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,19 +16,17 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Dialog {
-    public static void bottomDialogPlaylist(Context context,Berita berita,FragmentManager fm) {
+    public static void bottomDialogPlaylist(Context context,Berita berita,FragmentManager fm,boolean online) {
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         dialog.setContentView(R.layout.bottomsheet);
 
         Button lihat = dialog.findViewById(R.id.view);
         Button edit = dialog.findViewById(R.id.edit);
         Button hapus = dialog.findViewById(R.id.hapus);
-
         lihat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,9 +46,13 @@ public class Dialog {
             @Override
             public void onClick(View v) {
                 FragmentTransaction ft =fm.beginTransaction();
-                ft.replace(R.id.frame, NewPostFragment.editInstance(true,berita));
+                ft.replace(R.id.frame, NewPostFragment.editInstance(true,berita,online));
                 ft.addToBackStack(null);
                 ft.commit();
+
+
+
+
 
                 dialog.dismiss();
 
@@ -70,7 +68,7 @@ public class Dialog {
                 delete(berita.getId(),context);
                 dialog.dismiss();
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.frame, MainFragment.newInstance("data1","data2"));
+                ft.replace(R.id.frame, ListOnLineFragment.newInstance("data1","data2"));
                 ft.addToBackStack(null);
                 ft.commit();
 

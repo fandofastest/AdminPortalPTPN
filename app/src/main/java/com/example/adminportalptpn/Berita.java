@@ -4,8 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Berita extends RealmObject implements Parcelable {
+    @PrimaryKey
     private  int no ;
     private String id,judul,penulis,kategori,foto,isi,tanggal;
 

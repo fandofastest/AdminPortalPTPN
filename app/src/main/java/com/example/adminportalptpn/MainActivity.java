@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame, MainFragment.newInstance("data1","data2"));
+        ft.replace(R.id.frame, MainFragment2.newInstance("data1","data2"));
         ft.addToBackStack(null);
         ft.commit();
     }
