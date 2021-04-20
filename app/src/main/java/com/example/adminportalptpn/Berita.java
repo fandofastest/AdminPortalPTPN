@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
 public class Berita extends RealmObject implements Parcelable {
     @PrimaryKey
     private  int no ;
-    private String id,judul,penulis,kategori,foto,isi,tanggal;
+    private String id,judul,penulis,kategori,foto,isi,tanggal,la,lo;
 
 
 
@@ -26,6 +26,8 @@ public class Berita extends RealmObject implements Parcelable {
         foto = in.readString();
         isi = in.readString();
         tanggal = in.readString();
+        la = in.readString();
+        lo = in.readString();
     }
 
     public static final Creator<Berita> CREATOR = new Creator<Berita>() {
@@ -40,20 +42,20 @@ public class Berita extends RealmObject implements Parcelable {
         }
     };
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public int getNo() {
         return no;
     }
 
     public void setNo(int no) {
         this.no = no;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getJudul() {
@@ -104,6 +106,22 @@ public class Berita extends RealmObject implements Parcelable {
         this.tanggal = tanggal;
     }
 
+    public String getLa() {
+        return la;
+    }
+
+    public void setLa(String la) {
+        this.la = la;
+    }
+
+    public String getLo() {
+        return lo;
+    }
+
+    public void setLo(String lo) {
+        this.lo = lo;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -119,5 +137,7 @@ public class Berita extends RealmObject implements Parcelable {
         dest.writeString(foto);
         dest.writeString(isi);
         dest.writeString(tanggal);
+        dest.writeString(la);
+        dest.writeString(lo);
     }
 }

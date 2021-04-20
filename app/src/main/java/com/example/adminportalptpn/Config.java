@@ -14,5 +14,8 @@ public class Config {
     public static String nohp ="";
     public static String token ="";
 
+    public static String la="";
+    public static String lo="";
+
 
 }

@@ -1,10 +1,14 @@
 package com.example.adminportalptpn;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -24,6 +28,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,14 +55,17 @@ public class NewPostFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private boolean edit =false;
+    private boolean edit = false;
     private Berita berita;
     private Context context;
-    EditText title,isi;
+    EditText title, isi;
     Spinner kategori;
     String katselected;
     Button simpan;
-    boolean online =true;
+    boolean online = true;
+
+    String lo,la;
+
     public NewPostFragment() {
         // Required empty public constructor
     }
@@ -64,7 +74,6 @@ public class NewPostFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-
      * @return A new instance of fragment NewPostFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -74,12 +83,12 @@ public class NewPostFragment extends Fragment {
         return fragment;
     }
 
-    public static NewPostFragment editInstance(boolean edit,Berita berita,boolean online) {
+    public static NewPostFragment editInstance(boolean edit, Berita berita, boolean online) {
         NewPostFragment fragment = new NewPostFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_PARAM1, edit);
         args.putParcelable(ARG_PARAM2, berita);
-        args.putBoolean("on",online);
+        args.putBoolean("on", online);
         fragment.setArguments(args);
         return fragment;
     }
@@ -90,9 +99,9 @@ public class NewPostFragment extends Fragment {
         if (getArguments() != null) {
             edit = getArguments().getBoolean(ARG_PARAM1);
             berita = getArguments().getParcelable(ARG_PARAM2);
-            online=getArguments().getBoolean("on");
+            online = getArguments().getBoolean("on");
         }
-        context=getContext();
+        context = getContext();
     }
 
     @Override
@@ -106,53 +115,42 @@ public class NewPostFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        title=view.findViewById(R.id.judul);
-        isi=view.findViewById(R.id.isi);
-        kategori=view.findViewById(R.id.kategori);
-        simpan=view.findViewById(R.id.simpan);
+        title = view.findViewById(R.id.judul);
+        isi = view.findViewById(R.id.isi);
+        kategori = view.findViewById(R.id.kategori);
+        simpan = view.findViewById(R.id.simpan);
 
 
-        if (edit){
+        if (edit) {
 
 
             isi.setText(berita.getIsi());
             title.setText(berita.getJudul());
 
 
-
-
-            if (berita.getKategori().equals("Music")){
+            if (berita.getKategori().equals("Music")) {
                 kategori.setSelection(0);
-            }
-
-            else if (berita.getKategori().equals("Sports")){
+            } else if (berita.getKategori().equals("Sports")) {
                 kategori.setSelection(1);
-            }
-            else if (berita.getKategori().equals("Movie")){
+            } else if (berita.getKategori().equals("Movie")) {
                 kategori.setSelection(2);
             }
-
-
-
 
 
         }
 
 
-
         kategori.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               // Log.e("onItemSelected", "onItemSelected: "+position );
+                // Log.e("onItemSelected", "onItemSelected: "+position );
 
-                if (position==0){
-                    katselected="Music";
-                }
-                else if (position==1){
-                    katselected="Sports";
-                }
-                else if (position==2){
-                    katselected="Movie";
+                if (position == 0) {
+                    katselected = "Music";
+                } else if (position == 1) {
+                    katselected = "Sports";
+                } else if (position == 2) {
+                    katselected = "Movie";
                 }
 
 
@@ -177,49 +175,38 @@ public class NewPostFragment extends Fragment {
                 df.setTimeZone(tz);
                 String nowAsISO = df.format(new Date());
 
-                Log.e("tgl", nowAsISO );
+                Log.e("tgl", nowAsISO);
                 //2021-04-16 03:35:33
 
-                if (edit){
-                    if (online){
-                    edit(title.getText().toString(),nowAsISO,katselected,isi.getText().toString(),"foto",berita.getId());
+                if (edit) {
+                    if (online) {
+                        edit(title.getText().toString(), nowAsISO, katselected, isi.getText().toString(), "foto", berita.getId());
 
+                    } else {
+                        editoffline(berita);
                     }
 
-                    else {
-                      editoffline(berita);
-                    }
 
-
-                }
-
-                else {
-                    create(title.getText().toString(),nowAsISO,katselected,isi.getText().toString(),"foto");
+                } else {
+                    create(title.getText().toString(), nowAsISO, katselected, isi.getText().toString(), "foto");
                 }
             }
         });
 
 
-
-
-
-
-
-
-
     }
 
-        public void editoffline(Berita berita){
+    public void editoffline(Berita berita) {
 
         RealmHelper realmHelper = new RealmHelper(context);
 
         realmHelper.update(berita);
 
 
-}
+    }
 
-    public void edit(String judul,String tanggal,String kat,String isi,String gambar,String id){
-        String postUrl = Config.EDIT+id;
+    public void edit(String judul, String tanggal, String kat, String isi, String gambar, String id) {
+        String postUrl = Config.EDIT + id;
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         JSONObject postData = new JSONObject();
@@ -242,14 +229,14 @@ public class NewPostFragment extends Fragment {
                 Log.e("edit", response.toString());
 
                 try {
-                    String kode =response.getString("kode");
+                    String kode = response.getString("kode");
 
-                    if (kode.equals("200")){
+                    if (kode.equals("200")) {
 
                         Toast.makeText(context, "Edit Berhasil", Toast.LENGTH_SHORT).show();
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.frame, ListOnLineFragment.newInstance("data1","data2"));
+                        ft.replace(R.id.frame, ListOnLineFragment.newInstance("data1", "data2"));
                         ft.addToBackStack(null);
                         ft.commit();
 
@@ -260,16 +247,12 @@ public class NewPostFragment extends Fragment {
                 }
 
 
-
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, "Gagal Create", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
-
-
 
 
             }
@@ -280,7 +263,7 @@ public class NewPostFragment extends Fragment {
     }
 
 
-    public void create(String judul,String tanggal,String kat,String isi,String gambar){
+    public void create(String judul, String tanggal, String kat, String isi, String gambar) {
         String postUrl = Config.CREATE;
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -291,9 +274,8 @@ public class NewPostFragment extends Fragment {
             postData.put("kategori", kat);
             postData.put("isi", isi);
             postData.put("gambar", gambar);
+            postData.put("lokasi", Config.la+";"+Config.lo);
             postData.put("_token", Config.token);
-
-
 
 
         } catch (JSONException e) {
@@ -306,14 +288,14 @@ public class NewPostFragment extends Fragment {
                 Log.e("testlogin", response.toString());
 
                 try {
-                    String kode =response.getString("kode");
+                    String kode = response.getString("kode");
 
-                    if (kode.equals("200")){
+                    if (kode.equals("200")) {
 
                         Toast.makeText(context, "Create Berhasil", Toast.LENGTH_SHORT).show();
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.frame, MainFragment2.newInstance("data1","data2"));
+                        ft.replace(R.id.frame, MainFragment2.newInstance("data1", "data2"));
                         ft.addToBackStack(null);
                         ft.commit();
 
@@ -323,8 +305,6 @@ public class NewPostFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
 
 
             }
@@ -339,16 +319,17 @@ public class NewPostFragment extends Fragment {
                 berita.setIsi(isi);
                 berita.setKategori(kat);
                 berita.setTanggal(tanggal);
+                berita.setLa(Config.la);
+                berita.setLo(Config.lo);
 
                 RealmHelper realmHelper = new RealmHelper(context);
                 realmHelper.save(berita);
 
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.frame, MainFragment2.newInstance("data1","data2"));
+                ft.replace(R.id.frame, MainFragment2.newInstance("data1", "data2"));
                 ft.addToBackStack(null);
                 ft.commit();
-
 
 
             }
@@ -357,6 +338,8 @@ public class NewPostFragment extends Fragment {
         requestQueue.add(jsonObjectRequest);
 
     }
+
+
 
 
 }
