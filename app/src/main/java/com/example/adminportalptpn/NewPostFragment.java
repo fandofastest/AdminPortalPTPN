@@ -313,7 +313,7 @@ public class NewPostFragment extends Fragment {
                         Toast.makeText(context, "Create Berhasil", Toast.LENGTH_SHORT).show();
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.frame, ListOnLineFragment.newInstance("data1","data2"));
+                        ft.replace(R.id.frame, MainFragment2.newInstance("data1","data2"));
                         ft.addToBackStack(null);
                         ft.commit();
 
@@ -342,6 +342,13 @@ public class NewPostFragment extends Fragment {
 
                 RealmHelper realmHelper = new RealmHelper(context);
                 realmHelper.save(berita);
+
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.frame, MainFragment2.newInstance("data1","data2"));
+                ft.addToBackStack(null);
+                ft.commit();
+
 
 
             }

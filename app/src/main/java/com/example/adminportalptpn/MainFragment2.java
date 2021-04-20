@@ -94,6 +94,7 @@ public class MainFragment2 extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 //Dipanggil ketika tab memasuki state/keadaan yang dipilih.
                 vp.setCurrentItem(tab.getPosition());
+                tabAdapter.notifyDataSetChanged();
             }
 
             @Override

@@ -2,7 +2,9 @@ package com.example.adminportalptpn;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -48,7 +50,20 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+        SharedPreferences sharedPreferences= getApplicationContext().getSharedPreferences("sp",MODE_PRIVATE);
+        boolean login = sharedPreferences.getBoolean("login",false);
 
+
+        if (login){
+            Config.ID=sharedPreferences.getString("ID","");
+            Config.name=sharedPreferences.getString("name","");
+            Config.email=sharedPreferences.getString("email","");
+            Config.nohp=sharedPreferences.getString("nohp","");
+            Config.token=sharedPreferences.getString("token","");
+
+            Intent intent= new Intent(LoginActivity.this,MainActivity.class);
+            startActivity(intent);
+        }
 
 
 
@@ -85,6 +100,21 @@ public class LoginActivity extends AppCompatActivity {
                             Config.nohp=jsonUser.getString("hp");
                             Config.token=token;
                             Toast.makeText(LoginActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
+
+
+
+                            SharedPreferences sharedPreferences= getApplicationContext().getSharedPreferences("sp",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean("login",true);
+                            editor.putString("ID",Config.ID);
+                            editor.putString("name",Config.name);
+                            editor.putString("email",Config.email);
+                            editor.putString("nohp",Config.nohp);
+                            editor.putString("token",Config.token);
+                            editor.apply();
+
+
+
 
                             Intent intent= new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
