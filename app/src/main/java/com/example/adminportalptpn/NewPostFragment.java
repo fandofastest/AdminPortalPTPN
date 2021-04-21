@@ -199,8 +199,14 @@ public class NewPostFragment extends Fragment {
     public void editoffline(Berita berita) {
 
         RealmHelper realmHelper = new RealmHelper(context);
+        Log.e("eddddddddd", String.valueOf(berita.getNo()));
+        realmHelper.update(berita.getNo(),title.getText().toString(),katselected,isi.getText().toString());
 
-        realmHelper.update(berita);
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.frame, MainFragment2.newInstance("data1", "data2"));
+        ft.addToBackStack(null);
+        ft.commit();
 
 
     }
@@ -236,7 +242,7 @@ public class NewPostFragment extends Fragment {
                         Toast.makeText(context, "Edit Berhasil", Toast.LENGTH_SHORT).show();
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.frame, ListOnLineFragment.newInstance("data1", "data2"));
+                        ft.replace(R.id.frame, MainFragment2.newInstance("data1", "data2"));
                         ft.addToBackStack(null);
                         ft.commit();
 

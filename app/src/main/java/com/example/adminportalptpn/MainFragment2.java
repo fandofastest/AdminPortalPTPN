@@ -1,5 +1,6 @@
 package com.example.adminportalptpn;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,9 +12,11 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.tabs.TabLayout;
 
 /**
@@ -75,6 +78,20 @@ public class MainFragment2 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+        Button button= view.findViewById(R.id.loc);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent= new Intent(getContext(),Mylocation.class);
+                startActivity(intent);
+
+            }
+        });
+
 
         nama=view.findViewById(R.id.nama);
         nama.setText("Selamat Datang "+Config.name);

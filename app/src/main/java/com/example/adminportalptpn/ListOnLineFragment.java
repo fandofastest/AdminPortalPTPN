@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,9 +144,11 @@ public class ListOnLineFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         try {
                             String kode =response.getString("kode");
-                            if (kode.equals("200")){
 
+                            Log.e("kode", kode );
+                            if (kode.equals("200")){
                                 JSONArray databerita= response.getJSONArray("berita");
+                                Log.e("berita", String.valueOf(databerita.length()));
 
                                 for (int i = 0; i < databerita.length() ; i++) {
                                     JSONObject jsonObject=  databerita.getJSONObject(i);
@@ -177,6 +180,7 @@ public class ListOnLineFragment extends Fragment {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.e("error", error.getMessage() );
                         // TODO: Handle error
 
                     }

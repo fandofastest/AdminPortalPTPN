@@ -48,36 +48,41 @@ public class RealmHelper {
 
     }
 
+    public void update(int no,String judul,String kategori,String isi) {
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Berita model = realm.where(Berita.class)
+                        .equalTo("no", no)
+                        .findFirst();
+
+                model.setJudul(judul);
+                model.setKategori(kategori);
+                model.setIsi(isi);
+
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                Log.e("fff", "sukses" );
+
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                error.printStackTrace();
+                Log.e("fff", error.getMessage() );
+
+            }
+        });
+    }
+
     // untuk memanggil semua data
     public List<Berita> getLocalberita(){
         RealmResults<Berita> results = realm.where(Berita.class).findAll();
         return results;
     }
 
-    // untuk meng-update data
-    public void update(Berita berita){
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm1) {
-                Berita model = realm1.where(Berita.class).equalTo("no", berita.getNo()).findFirst();
-
-                model.setIsi(berita.getIsi());
-                model.setJudul(berita.getJudul());
-                model.setKategori(berita.getKategori());
-
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                Log.e("pppp", "onSuccess: Update Successfully");
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
-                error.printStackTrace();
-            }
-        });
-    }
 
     public void deleteberita(Integer no) {
         final RealmResults<Berita> model = realm.where(Berita.class).equalTo("no", no).findAll();

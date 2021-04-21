@@ -36,13 +36,14 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButtonText("ok")
                         .build());
 
-        getlocation();
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        getlocation();
 
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
