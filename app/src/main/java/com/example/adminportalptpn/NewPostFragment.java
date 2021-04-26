@@ -3,6 +3,7 @@ package com.example.adminportalptpn;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -63,6 +64,11 @@ public class NewPostFragment extends Fragment {
     String katselected;
     Button simpan;
     boolean online = true;
+
+    private static final int REQUEST_PERMISSIONS = 100;
+    private static final int PICK_IMAGE_REQUEST =1 ;
+    private Bitmap bitmap;
+    private String filePath;
 
     String lo,la;
 
@@ -197,7 +203,6 @@ public class NewPostFragment extends Fragment {
     }
 
     public void editoffline(Berita berita) {
-
         RealmHelper realmHelper = new RealmHelper(context);
         Log.e("eddddddddd", String.valueOf(berita.getNo()));
         realmHelper.update(berita.getNo(),title.getText().toString(),katselected,isi.getText().toString());
